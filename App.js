@@ -1,18 +1,49 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet } from 'react-native';
 import { createStore, combineReducers } from 'redux';
+import { enableScreens } from 'react-native-screens'
 import { Provider } from 'react-redux';
+import AppLoading from 'expo-app-loading';
 import productReducer from './store/reducers/products';
+import cartReducer from './store/reducers/cart';
 import ShopNavigation from './navigation/ShopNavigation';
+import * as Font from 'expo-font';
+// import { composeWithDevTools } from 'redux-devtools-extension'
+
+enableScreens()
 
 const rootReducer = combineReducers({
-  products: productReducer
+  products: productReducer,
+  cart: cartReducer
 })
 
+// const store = createStore(rootReducer, composeWithDevTools());
 const store = createStore(rootReducer);
 
+const fetchFonts = () => {
+  return Font.loadAsync({
+    "open-sans-bold": require("./assets/fonts/OpenSans-Bold.ttf"),
+    "open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),
+  });
+};
+
+
 export default function App() {
+  const [dataLoaded, setDataLoaded] = useState(false);
+  
+  if (!dataLoaded) 
+  {
+    return (
+      <AppLoading
+        startAsync={fetchFonts}
+        onFinish={() => {
+          setDataLoaded(true)
+        }}
+        onError={(err) => console.log(err)}
+      />
+    );
+  }
+
   return (
     <Provider store={store}>
       <ShopNavigation/>
