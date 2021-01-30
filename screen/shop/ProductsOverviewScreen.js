@@ -34,16 +34,20 @@ const ProductsOverviewScreen = (props) => {
 
 const styles = StyleSheet.create({});
 
-ProductsOverviewScreen.navigationOptions = {
-  headerRight: (
-    <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-      <Item
-        title="Cart"
-        iconName={Platform.OS === "andorid" ? "md-cart" : "ios-cart"}
-        onPress={() => {}}
-      />
-    </HeaderButtons>
-  ),
+ProductsOverviewScreen.navigationOptions = navData => {
+  return {
+    headerRight: (
+      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+        <Item
+          title="Cart"
+          iconName={Platform.OS === "andorid" ? "md-cart" : "ios-cart"}
+          onPress={() => {
+            navData.navigation.navigate('Cart')
+          }}
+        />
+      </HeaderButtons>
+    )
+  }
 };
 
 export default ProductsOverviewScreen;

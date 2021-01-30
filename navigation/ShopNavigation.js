@@ -4,7 +4,7 @@ import { createAppContainer } from 'react-navigation';
 import Colors from '../constants/Colors';
 import ProductsOverviewScreen from '../screen/shop/ProductsOverviewScreen'
 import ProductDetailScreen from '../screen/shop/ProductDetailScreen'
-
+import CartScreen from '../screen/shop/CartScreen'
 
 const ProductsNavigator = createStackNavigator({
   ProductsOverview: {
@@ -13,7 +13,8 @@ const ProductsNavigator = createStackNavigator({
       headerTitle: 'Todos los productos'
     }
   },
-  ProductDetail: ProductDetailScreen
+  ProductDetail: ProductDetailScreen,
+  Cart: CartScreen,
 }, {
   defaultNavigationOptions: {
     headerStyle: {
