@@ -36,7 +36,7 @@ const styles = StyleSheet.create({});
 
 ProductsOverviewScreen.navigationOptions = navData => {
   return {
-    headerRight: (
+    headerRight: () => (
       <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
         <Item
           title="Cart"
