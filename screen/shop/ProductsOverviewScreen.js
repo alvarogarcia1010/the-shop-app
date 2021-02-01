@@ -36,6 +36,15 @@ const styles = StyleSheet.create({});
 
 ProductsOverviewScreen.navigationOptions = navData => {
   return {
+    headerLeft: () => (
+      <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+        <Item
+          title="Menu"
+          iconName={Platform.OS === "andorid" ? "md-menu" : "ios-menu"}
+          onPress={() => navData.navigation.toggleDrawer()}
+        />
+      </HeaderButtons>
+    ),
     headerRight: () => (
       <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
         <Item
