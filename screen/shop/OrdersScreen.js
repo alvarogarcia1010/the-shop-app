@@ -4,6 +4,7 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import {FlatList} from "react-native-gesture-handler";
 import {useSelector} from "react-redux";
 import CustomHeaderButton from "../../component/UI/CustomHeaderButton";
+import OrderItem from "../../component/shop/OrderItem";
 
 const OrdersScreen = () => {
   const orders = useSelector(state => state.orders.orders);
@@ -11,7 +12,13 @@ const OrdersScreen = () => {
     <FlatList
       data={orders}
       keyExtractor={item => item.id}
-      renderItem={itemData => <Text>{itemData.item.totalAmount}</Text>}
+      renderItem={itemData => (
+        <OrderItem 
+          amount={itemData.item.totalAmount}
+          date={itemData.item.readableDate}
+          items={itemData.item.items}
+        />
+      )}
     />
   );
 };
