@@ -13,11 +13,11 @@ export const createProduct = (title, imageUrl, price, description) => {
   }
 }
 
-export const updateProduct = (id, title, imageUrl, price, description) => {
+export const updateProduct = (id, title, imageUrl, description) => {
   return {
     type: UPDATE_PRODUCT,
     pid: id,
-    productData: {title, imageUrl, price, description}
+    productData: {title, imageUrl, description}
   }
 }
 
