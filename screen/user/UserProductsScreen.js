@@ -12,7 +12,7 @@ const UserProductsScreen = props => {
   const userProduct = useSelector(state => state.products.userProducts)
   const dispatch = useDispatch()
 
-  const editProductHandler = (id) => {
+  const editProductHandler = (id, ) => {
     props.navigation.navigate('EditProduct', {
       productId: id
     })
@@ -50,7 +50,7 @@ UserProductsScreen.navigationOptions = navData => {
       <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
         <Item
           title="Menu"
-          iconName={Platform.OS === "andorid" ? "md-menu" : "ios-menu"}
+          iconName={Platform.OS === "android" ? "md-menu" : "ios-menu"}
           onPress={() => navData.navigation.toggleDrawer()}
         />
       </HeaderButtons>
@@ -59,7 +59,7 @@ UserProductsScreen.navigationOptions = navData => {
       <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
       <Item
         title="Add"
-        iconName={Platform.OS === "andorid" ? "md-create" : "ios-create"}
+        iconName={Platform.OS === "android" ? "md-create" : "ios-create"}
         onPress={() => navData.navigation.navigate('EditProduct')}
       />
     </HeaderButtons>
