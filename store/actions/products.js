@@ -40,7 +40,19 @@ export const fetchProducts = () => {
 }
 
 export const deleteProduct = productId => {
-  return { type: DELETE_PRODUCT, pid: productId }
+  return async dispatch => {
+
+    const response = await fetch(`https://alerta-covid-sv.firebaseio.com/products/${productId}.json`, { 
+      method: 'DELETE'
+    })
+
+    if(!response.ok)
+    {
+      throw new Error("Hubo un error")
+    }
+
+    return dispatch({ type: DELETE_PRODUCT, pid: productId })
+  }
 }
 
 export const createProduct = (title, imageUrl, price, description) => {
@@ -63,10 +75,26 @@ export const createProduct = (title, imageUrl, price, description) => {
 }
 
 export const updateProduct = (id, title, imageUrl, description) => {
-  return {
-    type: UPDATE_PRODUCT,
-    pid: id,
-    productData: {title, imageUrl, description}
+  return async dispatch => {
+    const response = await fetch(`https://alerta-covid-sv.firebaseio.com/products/${id}.json`, { 
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({title, imageUrl, description})
+    })
+
+    if(!response.ok)
+    {
+      throw new Error("Hubo un error")
+    }
+
+    dispatch({
+      type: UPDATE_PRODUCT,
+      pid: id,
+      productData: {title, imageUrl, description}
+    })
   }
+ 
 }
 
