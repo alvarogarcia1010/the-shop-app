@@ -11,6 +11,7 @@ import * as productsActions from "../../store/actions/products";
 
 const ProductsOverviewScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false)
+  const [isRefreshing, setIsRefreshing] = useState(false)
   const [error, setError] = useState()
   const products = useSelector((state) => state.products.availableProducts);
   const dispatch = useDispatch();
@@ -25,7 +26,7 @@ const ProductsOverviewScreen = (props) => {
   const loadProducts = useCallback(async () => {
     console.log("LOAD PRODUCTS")
     setError(null)
-    setIsLoading(true)
+    setIsRefreshing(true)
     try {
       await dispatch(productsActions.fetchProducts())
     } catch (error) {
@@ -33,12 +34,16 @@ const ProductsOverviewScreen = (props) => {
 
       setError(error)
     }
-    setIsLoading(false)
+    setIsRefreshing(false)
   }, [dispatch, setIsLoading, setError])
 
-  // useEffect(() => {
-  //   loadProducts()
-  // }, [dispatch, loadProducts])
+  useEffect(() => {
+    setIsLoading(true)
+    loadProducts()
+      .then(() => {
+        setIsLoading(false)
+      })
+  }, [dispatch, loadProducts])
 
   useEffect(() => {
     const willFocusSub = props.navigation.addListener('willFocus', loadProducts)
@@ -81,6 +86,8 @@ const ProductsOverviewScreen = (props) => {
 
   return (
     <FlatList
+      onRefresh={loadProducts}
+      refreshing={isRefreshing}
       data={products}
       keyExtractor={(item) => item.id}
       renderItem={(itemData) => (

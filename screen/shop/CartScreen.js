@@ -1,5 +1,5 @@
-import React from 'react'
-import { View, Text, Button, StyleSheet} from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { View, Text, Button, StyleSheet, ActivityIndicator} from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { useSelector, useDispatch } from 'react-redux'
 import Colors from '../../constants/Colors'
@@ -10,6 +10,8 @@ import Card from '../../component/UI/Card'
 
 const CartScreen = props => {
   const dispatch = useDispatch()
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState()
   const cartTotalAmount = useSelector(state => state.cart.totalAmount)
   const cartItems = useSelector(state => {
       const transformedCartItems = []
@@ -27,7 +29,40 @@ const CartScreen = props => {
       return transformedCartItems.sort((a, b) => a.productId > b.productId ? 1 : -1);
   })
 
-  
+  const sendOrderHandler = async () => {
+    setIsLoading(true)
+    setError(null)
+
+    try {
+      await dispatch(orderActions.addOrder(cartItems, cartTotalAmount))
+    } 
+    catch (error) 
+    {
+      setError(error)  
+    }
+
+    setIsLoading(false)
+  }
+
+  useEffect(() => {
+    if(error)
+    {
+      Alert.alert("An error occurred", error, [{text: "Okay"}])
+    }
+  }, [error])
+
+  if(isLoading)
+  {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator 
+          size="large"
+          color={Colors.primary}
+        />
+      </View>
+    )
+  }
+
   return (
     <View style={styles.screen}>
       <Card style={styles.summary}>
@@ -38,7 +73,7 @@ const CartScreen = props => {
           color={Colors.accent} 
           title="Order now" 
           disabled={cartItems.length === 0}
-          onPress={() => dispatch(orderActions.addOrder(cartItems, cartTotalAmount))}
+          onPress={sendOrderHandler}
         />
       </Card>
       <FlatList 
@@ -61,6 +96,11 @@ const CartScreen = props => {
 const styles = StyleSheet.create({
   screen: {
     margin: 20,
+  },
+  centered: {
+    flex: 1, 
+    justifyContent: 'center', 
+    alignItems: 'center'
   },
   summary: {
     flexDirection: 'row',
