@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Platform, Alert } from 'react-native'
+import { View, Text, Button, Platform, Alert, StyleSheet } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { useDispatch, useSelector } from 'react-redux'
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
@@ -27,6 +27,15 @@ const UserProductsScreen = props => {
     })
   }
 
+  if(userProduct.length === 0)
+  {
+    return (
+      <View style={styles.centered}>
+        <Text>No hay productos</Text>
+      </View>
+    )
+  }
+
   return (
     <FlatList 
       data={userProduct}
@@ -52,6 +61,10 @@ const UserProductsScreen = props => {
 
   )
 }
+
+const styles = StyleSheet.create({
+  centered: {flex: 1, justifyContent: 'center', alignItems: 'center'}
+})
 
 UserProductsScreen.navigationOptions = navData => {
   return {

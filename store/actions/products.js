@@ -6,8 +6,9 @@ export const UPDATE_PRODUCT = 'UPDATE_PRODUCT';
 export const DELETE_PRODUCT = 'DELETE_PRODUCT';
 
 export const fetchProducts = () => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     try {
+      const currentState = getState()
       const response = await fetch('https://alerta-covid-sv.firebaseio.com/products.json')
       
       if(!response.ok) {
@@ -21,7 +22,7 @@ export const fetchProducts = () => {
       {
         loadedProducts.push(new Product(
           key,
-          'u1',
+          resData[key].ownerId,
           resData[key].title,
           resData[key].imageUrl,
           resData[key].description,
@@ -30,7 +31,10 @@ export const fetchProducts = () => {
       }
   
       console.log(resData)
-      dispatch( {type: SET_PRODUCTS, products: loadedProducts})
+      dispatch( {
+        type: SET_PRODUCTS, 
+        products: loadedProducts, 
+        userProducts: loadedProducts.filter(prod => prod.ownerId == currentState.auth.userId)})
     } 
     catch (error) {
       throw error
@@ -40,9 +44,9 @@ export const fetchProducts = () => {
 }
 
 export const deleteProduct = productId => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
 
-    const response = await fetch(`https://alerta-covid-sv.firebaseio.com/products/${productId}.json`, { 
+    const response = await fetch(`https://alerta-covid-sv.firebaseio.com/products/${productId}.json?auth=${getState().auth.token}`, { 
       method: 'DELETE'
     })
 
@@ -56,27 +60,28 @@ export const deleteProduct = productId => {
 }
 
 export const createProduct = (title, imageUrl, price, description) => {
-  return async dispatch => {
-    const response = await fetch('https://alerta-covid-sv.firebaseio.com/products.json',{ 
+  return async (dispatch, getState) => {
+    const currentState = getState()
+    const response = await fetch(`https://alerta-covid-sv.firebaseio.com/products.json?auth=${currentState.auth.token}`,{ 
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({title, imageUrl, price, description})
+      body: JSON.stringify({title, imageUrl, price, description, ownerId: currentState.auth.userId})
     })
 
     const resData = await response.json()
 
     dispatch({
       type: CREATE_PRODUCT,
-      productData: {id: resData.name, title, imageUrl, price, description}
+      productData: {id: resData.name, title, imageUrl, price, description, ownerId: currentState.auth.userId}
     })
   }
 }
 
 export const updateProduct = (id, title, imageUrl, description) => {
-  return async dispatch => {
-    const response = await fetch(`https://alerta-covid-sv.firebaseio.com/products/${id}.json`, { 
+  return async (dispatch, getState) => {
+    const response = await fetch(`https://alerta-covid-sv.firebaseio.com/products/${id}.json?auth=${getState().auth.token}`, { 
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json'

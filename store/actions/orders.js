@@ -4,9 +4,10 @@ export const ADD_ORDER = 'ADD_ORDER';
 export const SET_ORDERS = 'SET_ORDERS';
 
 export const fetchOrders = () => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     try {
-      const response = await fetch('https://alerta-covid-sv.firebaseio.com/orders.json')
+      const currentState = getState()
+      const response = await fetch(`https://alerta-covid-sv.firebaseio.com/orders/${currentState.auth.userId}.json`)
       
       if(!response.ok) {
         throw new Error("Algo salio mal")
@@ -36,10 +37,10 @@ export const fetchOrders = () => {
 }
 
 export const addOrder = (cartItems, totalAmount) => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     const date = new Date().toISOString()
-
-    const response = await fetch('https://alerta-covid-sv.firebaseio.com/orders/u1.json',{ 
+    const currentState = getState()
+    const response = await fetch(`https://alerta-covid-sv.firebaseio.com/orders/${currentState.auth.userId}.json?auth=${currentState.auth.token}`,{ 
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

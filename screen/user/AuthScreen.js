@@ -81,13 +81,13 @@ const AuthScreen = () => {
 
     try {
       await dispatch(action)
+      props.navigation.navigate('shop')
     } 
     catch (error) 
     {
       setError(error.message)
+      setIsLoading(false)
     }
-    
-    setIsLoading(false)
   }
 
   useEffect(() => {

@@ -4,6 +4,7 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { enableScreens } from 'react-native-screens'
 import { Provider } from 'react-redux';
 import AppLoading from 'expo-app-loading';
+import authReducer from './store/reducers/auth';
 import productReducer from './store/reducers/products';
 import cartReducer from './store/reducers/cart';
 import ordersReducer from './store/reducers/orders';
@@ -15,6 +16,7 @@ import ReduxThunk from 'redux-thunk'
 enableScreens()
 
 const rootReducer = combineReducers({
+  auth: authReducer,
   products: productReducer,
   cart: cartReducer,
   orders: ordersReducer
