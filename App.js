@@ -8,9 +8,9 @@ import authReducer from './store/reducers/auth';
 import productReducer from './store/reducers/products';
 import cartReducer from './store/reducers/cart';
 import ordersReducer from './store/reducers/orders';
-import ShopNavigation from './navigation/ShopNavigation';
 import * as Font from 'expo-font';
 import ReduxThunk from 'redux-thunk'
+import NavigationContainer from './navigation/NavigationContainer';
 // import { composeWithDevTools } from 'redux-devtools-extension'
 
 enableScreens()
@@ -52,7 +52,7 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <ShopNavigation/>
+      <NavigationContainer/>
     </Provider>
   );
 }

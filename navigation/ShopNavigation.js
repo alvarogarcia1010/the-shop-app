@@ -1,7 +1,8 @@
 import React from 'react'
-import { Platform } from 'react-native'
+import { useDispatch } from 'react-redux'
+import { Button, Platform, SafeAreaView, View } from 'react-native'
 import { createStackNavigator } from "react-navigation-stack";
-import { createDrawerNavigator } from 'react-navigation-drawer';
+import { createDrawerNavigator, DrawerNavigatorItems } from 'react-navigation-drawer';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import Colors from '../constants/Colors';
 import ProductsOverviewScreen from '../screen/shop/ProductsOverviewScreen'
@@ -9,9 +10,11 @@ import ProductDetailScreen from '../screen/shop/ProductDetailScreen'
 import CartScreen from '../screen/shop/CartScreen'
 import OrdersScreen from '../screen/shop/OrdersScreen'
 import UserProductsScreen from '../screen/user/UserProductsScreen'
+import StartupScreen from '../screen/user/StartupScreen'
 import { Ionicons } from '@expo/vector-icons';
 import EditProductScreen from '../screen/user/EditProductScreen';
 import AuthScreen from '../screen/user/AuthScreen';
+import * as authAction from '../store/actions/auth'
 
 const defaultNavOptions = {
   headerStyle: {
@@ -115,6 +118,21 @@ const ShopNavigator = createDrawerNavigator(
   {
     contentOptions: {
       activeTintColor: Colors.primary
+    },
+    contentComponent: props => {
+      const dispatch = useDispatch()
+
+      return (
+        <View style={{flex: 1, padding: 20}} >
+          <SafeAreaView forceInset={{top:'always', horizontal: 'never'}}>
+            <DrawerNavigatorItems {...props} />
+            <Button title="Logout" color={Colors.primary} onPress={() => {
+              dispatch(authAction.logout())
+              props.navigation.navigate('Auth')
+            }} />
+          </SafeAreaView>
+        </View>
+      )
     }
   }
 )
@@ -134,6 +152,7 @@ const AuthNavigator = createStackNavigator(
 )
 
 const MainNavigator = createSwitchNavigator({
+  Startup: StartupScreen,
   Auth: AuthNavigator,
   Shop: ShopNavigator
 })
