@@ -1,5 +1,6 @@
 import Product from "../../models/product";
-
+import * as Notifications from 'expo-notifications'
+import * as Permisions from 'expo-permisions'
 export const SET_PRODUCTS = 'SET_PRODUCTS';
 export const CREATE_PRODUCT = 'CREATE_PRODUCT';
 export const UPDATE_PRODUCT = 'UPDATE_PRODUCT';
@@ -61,13 +62,27 @@ export const deleteProduct = productId => {
 
 export const createProduct = (title, imageUrl, price, description) => {
   return async (dispatch, getState) => {
+    let pushToken;
+    let statusObj = await Permisions.getAsync(Permisions.Notifications)
+    
+    if(statusObj.status != 'granted') {
+      statusObj = await Permisions.getAsync(Permisions.Notifications)
+    }
+
+    if(statusObj.status != 'granted'){
+      pushToken = null;
+    }
+    else{
+      pushToken = (await Notifications.getExpoPushTokenAsync()).data
+    }
+    
     const currentState = getState()
     const response = await fetch(`https://alerta-covid-sv.firebaseio.com/products.json?auth=${currentState.auth.token}`,{ 
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({title, imageUrl, price, description, ownerId: currentState.auth.userId})
+      body: JSON.stringify({title, imageUrl, price, description, ownerId: currentState.auth.userId, ownerPushToken: pushToken})
     })
 
     const resData = await response.json()

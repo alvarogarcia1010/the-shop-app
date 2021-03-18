@@ -23,6 +23,7 @@ export default (state = initialState, action) => {
         action.productData.imageUrl,
         action.productData.description,
         parseInt(action.productData.price),
+        action.ownerPushToken,
       )
 
       console.log(newProduct)

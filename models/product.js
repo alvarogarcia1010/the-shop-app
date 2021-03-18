@@ -1,6 +1,6 @@
 class Product 
 {
-  constructor(id, ownerId, title, imageUrl, description, price) 
+  constructor(id, ownerId, title, imageUrl, description, price, ownerPushToken = null) 
   {
     this.id = id;
     this.ownerId = ownerId;
@@ -8,6 +8,7 @@ class Product
     this.imageUrl = imageUrl;
     this.description = description;
     this.price = price;
+    this.ownerPushToken = ownerPushToken;
   }
 }
 
